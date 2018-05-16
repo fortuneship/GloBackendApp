@@ -7,40 +7,36 @@
     tools:context="com.tunex.mightyglobackend.MainActivity">
 
 
-    <!--<LinearLayout-->
-        <!--android:orientation="horizontal"-->
-        <!--android:id="@+id/layout"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="50dp"-->
-        <!--android:background="@color/grey_light">-->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:background="@color/grey_light">
 
-        <!--<RelativeLayout-->
-            <!--android:paddingRight="16dp"-->
-            <!--android:paddingLeft="16dp"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="50dp">-->
-
-            <!--<ImageView-->
-                <!--android:layout_alignParentLeft="true"-->
-                <!--android:layout_width="250dp"-->
-                <!--android:layout_height="50dp" />-->
-
-
-            <!--<ImageView-->
-                <!--android:id="@+id/view_list_img"-->
-                <!--android:background="@color/colorAccent"-->
-                <!--android:src="@drawable/ic_view_list_black_24dp"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:layout_alignParentRight="true"-->
-                <!--android:layout_width="40dp"-->
-                <!--android:layout_height="30dp" />-->
-
-
-        <!--</RelativeLayout>-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
 
 
-    <!--</LinearLayout>-->
+        <TextView
+            android:text="@string/airtime_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_medium"
+            android:textAllCaps="true"/>
+
+            <TextView
+                android:id="@+id/airtime_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
 
 
     <!--<View-->
@@ -81,8 +77,11 @@
 
 
     <RelativeLayout
-        android:padding="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_below="@id/layout"
+        android:paddingTop="8dp"
+        android:paddingBottom="16dp"
+        android:paddingRight="16dp"
+        android:paddingLeft="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -110,10 +109,8 @@
 
 
         <TextView
-            android:textSize="@dimen/text_size_large"
-            android:hint="@string/hint_recipient_number_required"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            style="@style/TextViewLabelStyle"
+            android:hint="@string/hint_recipient_number_required"/>
 
         <EditText
             android:maxLines="1"
@@ -125,10 +122,8 @@
 
 
        <TextView
-           android:layout_marginTop="5dp"
-           android:textSize="@dimen/text_size_large"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
+
+           style="@style/TextViewLabelStyle"
            android:text="@string/hint_bundle_value"/>
 
                 <RelativeLayout
@@ -170,11 +165,8 @@
 
 
                 <TextView
-            android:hint="@string/hint_bundle_cost"
-            android:textSize="@dimen/text_size_large"
-            android:layout_marginTop="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+                    style="@style/TextViewLabelStyle"
+                    android:hint="@string/hint_bundle_cost" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -205,11 +197,8 @@
 
 
                 <TextView
+                    style="@style/TextViewLabelStyle"
                     android:id="@+id/request_source"
-                    android:layout_marginTop="5dp"
-                    android:textSize="@dimen/text_size_large"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:text="@string/hint_request_source"/>
 
         <RelativeLayout
@@ -250,12 +239,9 @@
                 <!--</Spinner>-->
 
         <TextView
+            style="@style/TextViewLabelStyle"
             android:hint="@string/hint_time_received"
-            android:textSize="@dimen/text_size_large"
-            android:layout_marginTop="5dp"
-            android:id="@+id/time_received"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:id="@+id/time_received" />
 
         <EditText
             android:maxLines="1"
@@ -267,12 +253,12 @@
 
 
         <Button
+            style="@style/CustomButton"
             android:id="@+id/submit_button"
             android:text="@string/action_submit"
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="match_parent" />
 
             </LinearLayout>
         </ScrollView>
@@ -281,9 +267,6 @@
 
 
 </RelativeLayout>
-
-
-
 
 
 </RelativeLayout>

@@ -81,6 +81,19 @@ public class Contract {
 
 
 
+        /**
+         * GLO codes
+         */
+        public static final String CODE_ONE_GIG = "*127*57*";
+        public static final String CODE_TWO_GIG = "*127*53*";
+        public static final String CODE_FOUR_FIVE_GIG = "*127*55*";
+        public static final String CODE_SEVEN_TWO_GIG= "*127*58*";
+        public static final String CODE_TWELVE_FIVE_GIG = "*127*59*";
+        public static final String CODE_FIFTEEN_SIX_GIG = "*127*2*";
+        public static final String CODE_TWENTY_FIVE_GIG  = "*127*1*";
+        public static final String CODE_TWELVE_FIVE_MB  = "*127*32*";
+
+
     }
 
 }

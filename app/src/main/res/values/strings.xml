@@ -10,6 +10,7 @@
     <string name="form_save">Save to database successfully</string>
 
 
+    <string name="airtime_label">Airtime Balance</string>
 
 
     <string name="hint_recipient_number_required">Recipient Number (Required)</string>
@@ -21,7 +22,10 @@
     <string name="hint_status">Status</string>
     <string name="hint_time_done">Time Done</string>
 
-    <string name="config_service">My Response.</string>
+    <string name="hint_button_text">Send Data</string>
+
+
+    <string name="config_service">Mighty Glo Backend</string>
 
     <string name="action_log">Log</string>
 

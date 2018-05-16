@@ -1,13 +1,24 @@
 package com.tunex.mightyglobackend;
 
+import android.app.AlertDialog;
 import android.app.LoaderManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.media.RingtoneManager;
 import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -33,6 +44,8 @@ import com.tunex.mightyglobackend.data.DataDbHelper;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity  {
 
@@ -46,6 +59,19 @@ public class MainActivity extends AppCompatActivity  {
     private String mBundleValue = DataEntry.BUNDLE_UNKNOWN;
     private String mBundleCost = DataEntry.BUNDLE_UNKOWN_PRICE;
     private String mRequestSource = DataEntry.REQUEST_SOURCE_UNKNOWN;
+
+    String recipientNumber;
+    String timeReceived;
+
+    private TextView mAirtimeBalance;
+
+    // result from accessibility service
+    String mText;
+    //Notification id
+    private static final int uniqueID = 1000;
+
+
+    private Receiver mReceiver;
 
 
     /** Database helper that will provide us access to the database */
@@ -62,6 +88,13 @@ public class MainActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_main);
 
 
+        IntentFilter filter = new IntentFilter(Receiver.ACTION_RESPONSE);
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        mReceiver = new Receiver();
+        registerReceiver(mReceiver, filter);
+
+
+
         /** Initialise db helper */
         mDbHelper = new DataDbHelper(this);
 
@@ -73,7 +106,11 @@ public class MainActivity extends AppCompatActivity  {
         mRequestSourceSpinner = (Spinner) findViewById(R.id.request_source_spinner);
         mTimeReceived = (EditText) findViewById(R.id.time_received_edit_text);
 
+//        textView.setTextColor(ContextCompat.getColor(this,R.color.TextColor));
+
         mBundleCostSpinner.setEnabled(false);
+
+        mAirtimeBalance = (TextView) findViewById(R.id.airtime_label);
 
         // call spinner method
         setupRequestSourceSpinner();
@@ -89,8 +126,8 @@ public class MainActivity extends AppCompatActivity  {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                String recipientNumber = mRecipientNumber.getText().toString().trim();
-                String timeReceived = mTimeReceived.getText().toString().trim();
+                 recipientNumber = mRecipientNumber.getText().toString().trim();
+                 timeReceived = mTimeReceived.getText().toString().trim();
                 
 
                 validateInput(recipientNumber, timeReceived);
@@ -99,19 +136,6 @@ public class MainActivity extends AppCompatActivity  {
 
             @Override
             public void afterTextChanged(Editable editable) {
-
-//                if (editable.toString().trim().length() > 0){
-//////
-//            submitButton.setText("send data");
-//            submitButton.setBackgroundColor(Color.GREEN);
-//
-//        }else{
-//
-//            submitButton.setText("submit");
-//            submitButton.setBackgroundColor(Color.WHITE);
-//        }
-////
-//
 
             }
 
@@ -147,43 +171,19 @@ public class MainActivity extends AppCompatActivity  {
             public void onClick(View view) {
 
                 submit();
+               // sendGloData();
             }
         });
 
 
-
-
-
-
-    }
-
-    /** Check if fields are not empty */
-    private boolean validateInput(String recipientNumber, String timeReceived){
-
-        /** if fields are not empty change button text and color */
-        if (!recipientNumber.isEmpty() && !timeReceived.isEmpty()){
-
-            mSubmitButton.setBackgroundColor(Color.RED);
-            mSubmitButton.setText("send data");
-
-        }else{
-
-
-//            submitButton.setBackgroundColor(Color.BLUE);
-//            submitButton.setText("check balance");
-        }
-
-        return false;
     }
 
 
 
     /**
-     * Setup the dropdown spinner that allows the user to select bundle value.
+     * Setup the dropdown spinner that allows the user to select bundle value and corresponding bundle cost.
      */
     private void setupBundleValueSpinner() {
-
-
 
         ArrayAdapter requestSourceAdapter = ArrayAdapter.createFromResource(this,
                 R.array.array_bundle_value, android.R.layout.simple_spinner_item);
@@ -328,12 +328,259 @@ public class MainActivity extends AppCompatActivity  {
     }
 
 
+    /** Check if fields are not empty */
+    private boolean validateInput(String recipientNumber, String timeReceived){
+
+        /** if fields are not empty change button text and color */
+        if (!recipientNumber.isEmpty() && !timeReceived.isEmpty()){
+
+            mSubmitButton.setText(getString(R.string.hint_button_text));
+
+        }else{
+
+            //return button to initial state
+            //mSubmitButton.setBackgroundResource(android.R.drawable.btn_default);
+            mSubmitButton.setText(getString(R.string.action_submit));
+
+//            submitButton.setBackgroundColor(Color.BLUE);
+//            submitButton.setText("check balance");
+        }
+
+        return false;
+    }
+
+    /** Send glo data to recipient method */
+    private void sendGloData() {
+
+
+
+        if (mBundleValue.equals(getString(R.string.one_gig))){
+
+            String ussdCode = DataEntry.CODE_ONE_GIG + recipientNumber + Uri.encode("#");
+            startActivity(new Intent("android.intent.action.CALL", Uri.parse("tel:" + ussdCode)));
+
+        }else if (mBundleValue.equals(getString(R.string.two_gig))){
+
+            String ussdCode = DataEntry.CODE_TWO_GIG + recipientNumber + Uri.encode("#");
+            startActivity(new Intent("android.intent.action.CALL", Uri.parse("tel:" + ussdCode)));
+
+        }else if (mBundleValue.equals(getString(R.string.four_point_five))){
+
+            String ussdCode = DataEntry.CODE_FOUR_FIVE_GIG + recipientNumber + Uri.encode("#");
+            startActivity(new Intent("android.intent.action.CALL", Uri.parse("tel:" + ussdCode)));
+
+
+        }else if (mBundleValue.equals(getString(R.string.seven_point_two))){
+
+            String ussdCode = DataEntry.CODE_SEVEN_TWO_GIG + recipientNumber + Uri.encode("#");
+            startActivity(new Intent("android.intent.action.CALL", Uri.parse("tel:" + ussdCode)));
+
+
+        }else if (mBundleValue.equals(getString(R.string.twelve_point_five))){
+
+            String ussdCode = DataEntry.CODE_TWELVE_FIVE_GIG + recipientNumber + Uri.encode("#");
+            startActivity(new Intent("android.intent.action.CALL", Uri.parse("tel:" + ussdCode)));
+
+
+        }else if (mBundleValue.equals(getString(R.string.fifteen_point_six))){
+
+            String ussdCode = DataEntry.CODE_FIFTEEN_SIX_GIG + recipientNumber + Uri.encode("#");
+            startActivity(new Intent("android.intent.action.CALL", Uri.parse("tel:" + ussdCode)));
+
+        }else if (mBundleValue.equals(getString(R.string.twenty_five))){
+
+            String ussdCode = DataEntry.CODE_TWENTY_FIVE_GIG + recipientNumber + Uri.encode("#");
+            startActivity(new Intent("android.intent.action.CALL", Uri.parse("tel:" + ussdCode)));
+
+        }else{
+
+            String ussdCode = DataEntry.CODE_TWELVE_FIVE_MB + recipientNumber + Uri.encode("#");
+            startActivity(new Intent("android.intent.action.CALL", Uri.parse("tel:" + ussdCode)));
+
+        }
+
+
+    }
+
+
+    /** submit and save to database */
     private void submit(){
 
+        /** if button text is "send data" send glo data to recipient number and save to database */
+        if (mSubmitButton.getText().equals(getString(R.string.hint_button_text))) {
 
-        String recipientNumber = mRecipientNumber.getText().toString().trim();
-       // bundleCost = mBundleCost.getText().toString().trim();
-        String timeReceived = mTimeReceived.getText().toString().trim();
+            sendGloData();
+
+        }else{
+
+            Toast.makeText(this, "Fields are empty", Toast.LENGTH_LONG).show();
+
+        }
+
+
+
+//        String recipientNumber = mRecipientNumber.getText().toString().trim();
+//        String timeReceived = mTimeReceived.getText().toString().trim();
+
+    }
+
+
+    /** Receive response from accessibility service and display in activity */
+    public class Receiver extends BroadcastReceiver {
+        public static final String ACTION_RESPONSE = "com.example.mighty5.mightydata.android.intent.action.CALL";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            mText = intent.getStringExtra("result");
+
+            mAirtimeBalance.setText(mText);
+
+            Log.i("ussdResult", mText);
+
+
+//            String reg =  "Sorry, you are not gifting to valid Globacom user.";
+
+            String balance = mText;
+
+            Pattern p = Pattern.compile(":(.*?)G");
+
+
+            Matcher m = p.matcher(balance);
+
+            if (m.find()){
+
+
+               // status = "success";
+
+
+                //Toast.makeText(SendDataActivity.this, "Your last balance is "+ m.group(1), Toast.LENGTH_SHORT).show();
+
+            }else {
+
+                //Toast.makeText(getApplicationContext(), "Request not successful please try again", Toast.LENGTH_SHORT).show();
+
+                //status = "failed";
+                showNotification();
+
+                showDialog();
+
+                sendEmail();
+
+
+            }
+
+
+        }
+    }
+
+    private void showDialog() {
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        // set dialog message
+        alertDialogBuilder.setMessage("Sending data failed,Please try again")
+
+                .setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        // if this button is clicked, just close
+                        // the dialog box and do nothing
+                        dialog.cancel();
+                    }
+                });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+
+    }
+
+    private void sendEmail(){
+
+        //String SLACK_URL = "https://hooks.slack.com/services/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";
+
+        //String myJSONStr = 'payload= {"username": "SALE BOT", "icon_url": "example.com/img/icon.jpg", "channel": "#general"}'
+
+
+
+
+
+        //Getting content for email
+        String email = "tunde8983@gmail.com";
+        String subject = "glo data sent failed";
+        String message = " fail";
+
+        try{
+
+//            //Creating SendMail object
+//            SendMail sm = new SendMail(this, email, subject, message);
+//
+//            //Executing sendmail to send email
+//            sm.execute();
+
+
+        }catch (Exception e){
+
+            Log.e("SendMail", e.getMessage(), e);
+        }
+
+
+
+//
+//        Intent intent = new Intent(Intent.ACTION_SENDTO); // it's not ACTION_SEND
+//        intent.setType("text/plain");
+//        intent.putExtra(Intent.EXTRA_SUBJECT, "Subject of email");
+//        intent.putExtra(Intent.EXTRA_TEXT, "Body of email");
+//        //intent.setData(Uri.parse("mailto:default@recipient.com")); // or just "mailto:" for blank
+//        intent.setData(Uri.parse("mailto:tunde8983@gmail.com"));
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // this will make such that when user returns to your app, your app is displayed, instead of the email app.
+//        startActivity(intent);
+
+
+    }
+
+
+
+
+    private void showNotification() {
+
+        // define sound URI, the sound to be played when there's a notification
+        Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+
+        // intent triggered, you can add other intent for other actions
+        Intent mIntent = new Intent(this, MainActivity.class);
+        PendingIntent pIntent = PendingIntent.getActivity(this, 0, mIntent, 0);
+
+
+        // this is it, we'll build the notification!
+        // in the addAction method, if you don't want any icon, just set the first param to 0
+        Notification mNotification = new Notification.Builder(this)
+
+                .setContentTitle("New Post!")
+                //.setContentText(mText)
+                .setSmallIcon(R.drawable.textview_border)
+                .setContentIntent(pIntent)
+                .setSound(soundUri)
+                .setWhen(System.currentTimeMillis())
+                .build();
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        notificationManager.notify(uniqueID, mNotification);
+
+        // If you want to hide the notification after it was selected, do the code below
+        mNotification.flags |= Notification.FLAG_AUTO_CANCEL;
+
+        notificationManager.notify(0, mNotification);
+    }
+
+
+
+
+    private void saveToDb(){
+
 
         ContentValues values = new ContentValues();
         values.put(DataEntry.COLUMN_RECIPIENT_NUMBER, recipientNumber);
@@ -353,8 +600,6 @@ public class MainActivity extends AppCompatActivity  {
 
             Log.i("info:", "save to db is successful");
         }
-
-
 
 
 
