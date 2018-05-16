@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- These are the options displayed in the gender drop-down Spinner -->
+    <string-array name="array_request_source">
+        <item>@string/source_unknown</item>
+        <item>@string/source_airtime</item>
+        <item>@string/source_cash</item>
+        <item>@string/source_agent</item>
+        <item>@string/source_sales_rep</item>
+        <item>@string/source_web</item>
+        <item>@string/source_api</item>
+    </string-array>
+
+    <string-array name="array_bundle_value">
+        <item>@string/bundle_unknown</item>
+        <item>@string/one_gig</item>
+        <item>@string/two_gig</item>
+        <item>@string/four_point_five</item>
+        <item>@string/seven_point_two</item>
+        <item>@string/twelve_point_five</item>
+        <item>@string/fifteen_point_six</item>
+        <item>@string/twenty_five</item>
+        <item>@string/twelve_point_five_mb</item>
+    </string-array>
+
+    <string-array name="array_bundle_price">
+
+        <item>@string/bundle_unknown_price</item>
+        <item>@string/one_gig_price</item>
+        <item>@string/two_gig_price</item>
+        <item>@string/four_point_five_price</item>
+        <item>@string/seven_point_two_price</item>
+        <item>@string/twelve_point_five_price</item>
+        <item>@string/fifteen_point_six_price</item>
+        <item>@string/twenty_five_price</item>
+        <item>@string/twelve_point_five_mb_price</item>
+    </string-array>
+
+
+</resources>

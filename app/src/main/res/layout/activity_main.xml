@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.tunex.mightyglobackend.MainActivity">
+
+
+    <!--<LinearLayout-->
+        <!--android:orientation="horizontal"-->
+        <!--android:id="@+id/layout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:background="@color/grey_light">-->
+
+        <!--<RelativeLayout-->
+            <!--android:paddingRight="16dp"-->
+            <!--android:paddingLeft="16dp"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="50dp">-->
+
+            <!--<ImageView-->
+                <!--android:layout_alignParentLeft="true"-->
+                <!--android:layout_width="250dp"-->
+                <!--android:layout_height="50dp" />-->
+
+
+            <!--<ImageView-->
+                <!--android:id="@+id/view_list_img"-->
+                <!--android:background="@color/colorAccent"-->
+                <!--android:src="@drawable/ic_view_list_black_24dp"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_width="40dp"-->
+                <!--android:layout_height="30dp" />-->
+
+
+        <!--</RelativeLayout>-->
+
+
+
+    <!--</LinearLayout>-->
+
+
+    <!--<View-->
+        <!--android:id="@+id/view"-->
+        <!--android:layout_below="@id/layout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/view_width_small"-->
+        <!--android:background="@color/grey_light"-->
+        <!--android:layout_marginTop="4dp"/>-->
+
+    <!--<LinearLayout-->
+        <!--android:paddingLeft="16dp"-->
+        <!--android:paddingRight="16dp"-->
+        <!--android:id="@+id/layout1"-->
+        <!--android:layout_below="@id/view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/balance_result"-->
+            <!--android:textSize="20sp"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content" />-->
+
+    <!--</LinearLayout>-->
+
+    <!--<View-->
+        <!--android:id="@+id/view1"-->
+        <!--android:layout_below="@id/layout1"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/view_width_small"-->
+        <!--android:background="@color/grey_light"-->
+        <!--android:layout_marginTop="4dp"-->
+        <!--android:layout_marginBottom="4dp"/>-->
+
+
+
+
+
+    <RelativeLayout
+        android:padding="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!--android:layout_below="@id/view1"-->
+
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/background">
+        <!--android:layout_below="@id/layout1"-->
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+
+        <TextView
+            android:textSize="@dimen/text_size_large"
+            android:hint="@string/hint_recipient_number_required"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:maxLines="1"
+            android:inputType="number"
+            android:id="@+id/recipient_number_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/ContactTextView"/>
+
+
+       <TextView
+           android:layout_marginTop="5dp"
+           android:textSize="@dimen/text_size_large"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="@string/hint_bundle_value"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/ContactTextView"
+                    android:orientation="horizontal">
+                    <!--android:background="@drawable/textview_border"-->
+
+
+                    <Spinner
+                        android:id="@+id/bundle_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent"
+                        android:gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:spinnerMode="dropdown" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_arrow_drop_down_black_24dp" />
+
+                </RelativeLayout>
+
+        <!--<Spinner-->
+            <!--android:id="@+id/bundle_spinner"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+
+        <!--</Spinner>-->
+
+
+
+                <TextView
+            android:hint="@string/hint_bundle_cost"
+            android:textSize="@dimen/text_size_large"
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/ContactTextView"
+                    android:orientation="horizontal">
+
+
+
+                <Spinner
+                        android:id="@+id/bundle_cost_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center"
+                         style="@style/ContactTextView"/>
+
+
+                </RelativeLayout>
+                <!--<EditText-->
+            <!--android:inputType="number"-->
+            <!--android:maxLines="1"-->
+            <!--android:id="@+id/bundle_cost_edit_text"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--style="@style/ContactTextView"/>-->
+
+
+
+                <TextView
+                    android:id="@+id/request_source"
+                    android:layout_marginTop="5dp"
+                    android:textSize="@dimen/text_size_large"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hint_request_source"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/ContactTextView"
+            android:orientation="horizontal">
+            <!--android:background="@drawable/textview_border"-->
+
+
+            <Spinner
+                android:id="@+id/request_source_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:layout_marginLeft="5dp"
+                android:spinnerMode="dropdown" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_arrow_drop_down_black_24dp" />
+
+        </RelativeLayout>
+
+
+        <!--<Spinner-->
+                    <!--android:id="@+id/request_source_spinner"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content">-->
+
+                <!--</Spinner>-->
+
+        <TextView
+            android:hint="@string/hint_time_received"
+            android:textSize="@dimen/text_size_large"
+            android:layout_marginTop="5dp"
+            android:id="@+id/time_received"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:maxLines="1"
+            android:inputType="text"
+            android:id="@+id/time_received_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/ContactTextView"/>
+
+
+        <Button
+            android:id="@+id/submit_button"
+            android:text="@string/action_submit"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
+
+
+</RelativeLayout>
+
+
+
+
+
+</RelativeLayout>
+
+
+<!--style="@style/ContactTextView"-->
+
+    <!--style="@style/ContactLabelTextView"-->

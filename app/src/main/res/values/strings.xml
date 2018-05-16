@@ -1,0 +1,112 @@
+<resources>
+    <string name="app_name">MightyGloBackend</string>
+
+
+    <string name="country_prompt">Choose a country</string>
+
+
+    <!--error messages-->
+    <string name="error">Failed to save to database</string>
+    <string name="form_save">Save to database successfully</string>
+
+
+
+
+    <string name="hint_recipient_number_required">Recipient Number (Required)</string>
+    <string name="hint_bundle_value">Bundle Value</string>
+    <string name="hint_bundle_name">Bundle Name</string>
+    <string name="hint_bundle_cost">Bundle Cost</string>
+    <string name="hint_time_received">Time Received</string>
+    <string name="hint_request_source">Request Source</string>
+    <string name="hint_status">Status</string>
+    <string name="hint_time_done">Time Done</string>
+
+    <string name="config_service">My Response.</string>
+
+    <string name="action_log">Log</string>
+
+    <!--<string name="action_send">Send Data</string>-->
+    <string name="action_submit">Submit</string>
+
+
+
+    <!-- Label for dropdown menu option if the request source is unknown [CHAR LIMIT=20] -->
+    <string name="source_unknown">Unknown</string>
+
+    <!-- Label for dropdown menu option if the pet is male [CHAR LIMIT=20] -->
+    <string name="source_airtime">Artime</string>
+
+    <!-- Label for dropdown menu option if the pet is female [CHAR LIMIT=20] -->
+    <string name="source_cash">Cash</string>
+
+    <!-- Label for dropdown menu option if the pet's gender is unknown  -->
+    <string name="source_agent">Agent</string>
+
+    <!-- Label for dropdown menu option if the pet's gender is unknown  -->
+    <string name="source_sales_rep">Sales Rep</string>
+
+    <!-- Label for dropdown menu option if the pet's gender is unknown  -->
+    <string name="source_web">Web</string>
+
+    <!-- Label for dropdown menu option if the pet's gender is unknown  -->
+    <string name="source_api">Api</string>
+
+
+    <string name="bundle_unknown">Unknown</string>
+    <string name="one_gig">1GB</string>
+
+    <!-- Label for dropdown menu option if the pet is male [CHAR LIMIT=20] -->
+    <string name="two_gig">2GB</string>
+
+    <!-- Label for dropdown menu option if the pet is female [CHAR LIMIT=20] -->
+    <string name="four_point_five">4.5GB</string>
+
+    <!-- Label for dropdown menu option if the pet's gender is unknown  -->
+    <string name="seven_point_two">7.2GB</string>
+
+    <!-- Label for dropdown menu option if the pet's gender is unknown  -->
+    <string name="twelve_point_five">12.5GB</string>
+
+    <!-- Label for dropdown menu option if the pet's gender is unknown  -->
+    <string name="fifteen_point_six">15.6GB</string>
+
+    <!-- Label for dropdown menu option if the pet's gender is unknown  -->
+    <string name="twenty_five">25GB</string>
+
+    <!-- Label for dropdown menu option if the pet's gender is unknown  -->
+    <string name="twelve_point_five_mb">12.5MB</string>
+
+    <string name="action_insert_dummy_data">Insert Dummy Data</string>
+    <string name="action_delete_all_entries">Delete all entries</string>
+
+
+
+
+    <!-- Label for dropdown menu option if the request source is unknown [CHAR LIMIT=20] -->
+    <string name="bundle_unknown_price">Unknown</string>
+
+    <string name="one_gig_price">#1000</string>
+
+    <!-- Label for dropdown menu option if the pet is male [CHAR LIMIT=20] -->
+    <string name="two_gig_price">#2000</string>
+
+    <!-- Label for dropdown menu option if the pet is female [CHAR LIMIT=20] -->
+    <string name="four_point_five_price">#3000</string>
+
+    <!-- Label for dropdown menu option if the pet's gender is unknown  -->
+    <string name="seven_point_two_price">#4000</string>
+
+    <!-- Label for dropdown menu option if the pet's gender is unknown  -->
+    <string name="twelve_point_five_price">$5000</string>
+
+    <!-- Label for dropdown menu option if the pet's gender is unknown  -->
+    <string name="fifteen_point_six_price">$6000</string>
+
+    <!-- Label for dropdown menu option if the pet's gender is unknown  -->
+    <string name="twenty_five_price">#7000</string>
+
+    <!-- Label for dropdown menu option if the pet's gender is unknown  -->
+    <string name="twelve_point_five_mb_price">#8000</string>
+
+
+</resources>
