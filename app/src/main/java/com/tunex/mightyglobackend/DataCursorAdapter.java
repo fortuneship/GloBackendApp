@@ -58,7 +58,7 @@ public class DataCursorAdapter extends CursorAdapter {
         TextView sourceTextView = (TextView) view.findViewById(R.id.source);
         TextView receivedTimeTextView = (TextView) view.findViewById(R.id.received_time);
         TextView statusTextView = (TextView) view.findViewById(R.id.status);
-        TextView timeTextView = (TextView) view.findViewById(R.id.time);
+        TextView timeDoneTextView = (TextView) view.findViewById(R.id.timeDone);
 
 
         int recipientNumberColumnIndex = cursor.getColumnIndex(DataEntry.COLUMN_RECIPIENT_NUMBER);
@@ -67,7 +67,7 @@ public class DataCursorAdapter extends CursorAdapter {
         int sourceColumnIndex = cursor.getColumnIndex(DataEntry.COLUMN_REQUEST_SOURCE);
         int receivedTimeColumnIndex = cursor.getColumnIndex(DataEntry.COLUMN_TIME_RECEIVED);
         int statusColumnIndex = cursor.getColumnIndex(DataEntry.COLUMN_STATUS_);
-        int timeColumnIndex = cursor.getColumnIndex(DataEntry.COLUMN_TIME_DONE);
+        int timeDoneColumnIndex = cursor.getColumnIndex(DataEntry.COLUMN_TIME_DONE);
 
        String currentRecipientNumber = cursor.getString(recipientNumberColumnIndex);
         String currentBundleValue = cursor.getString(bundleValueColumnIndex);
@@ -75,7 +75,7 @@ public class DataCursorAdapter extends CursorAdapter {
         String currentSource = cursor.getString(sourceColumnIndex);
         String currentReceivedTime = cursor.getString(receivedTimeColumnIndex);
 //        String currentStatus = cursor.getString(statusColumnIndex);
-//        String currentTime = cursor.getString(timeColumnIndex);
+        String currentTimeDone = cursor.getString(timeDoneColumnIndex);
 
         numberTextView.setText(currentRecipientNumber);
         valueTextView.setText(currentBundleValue);
@@ -83,7 +83,7 @@ public class DataCursorAdapter extends CursorAdapter {
         sourceTextView.setText(currentSource);
         receivedTimeTextView.setText(currentReceivedTime);
 //        statusTextView.setText(currentStatus);
-//        timeTextView.setText(currentTime);
+        timeDoneTextView.setText(currentTimeDone);
 
     }
 }

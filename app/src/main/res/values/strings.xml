@@ -11,6 +11,7 @@
 
 
     <string name="airtime_label">Airtime Balance</string>
+    <string name="current_time">Time</string>
 
 
     <string name="hint_recipient_number_required">Recipient Number (Required)</string>
@@ -31,6 +32,7 @@
 
     <!--<string name="action_send">Send Data</string>-->
     <string name="action_submit">Submit</string>
+    <string name="action_airtime_balance">Airtime</string>
 
 
 

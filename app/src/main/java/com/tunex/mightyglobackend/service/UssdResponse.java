@@ -63,8 +63,8 @@ public class UssdResponse extends AccessibilityService {
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(MainActivity.Receiver.ACTION_RESPONSE);
             broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
-            broadcastIntent.putExtra("result", currentTime);
-            //broadcastIntent.putExtra("current time", currentTime);
+            broadcastIntent.putExtra("result", text);
+            broadcastIntent.putExtra("current time", currentTime);
             sendBroadcast(broadcastIntent);
 
 

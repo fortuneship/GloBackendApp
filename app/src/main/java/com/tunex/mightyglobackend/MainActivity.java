@@ -1,5 +1,6 @@
 package com.tunex.mightyglobackend;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.app.Notification;
@@ -13,11 +14,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -41,9 +44,11 @@ import android.widget.Toast;
 import com.tunex.mightyglobackend.data.Contract;
 import com.tunex.mightyglobackend.data.Contract.DataEntry;
 import com.tunex.mightyglobackend.data.DataDbHelper;
+import com.tunex.mightyglobackend.task.SendMail;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,6 +59,7 @@ public class MainActivity extends AppCompatActivity  {
     private Spinner mBundleCostSpinner;
     private Spinner mRequestSourceSpinner;
     private Button mSubmitButton;
+    private Button mAirtimeButton;
     private ImageView mHistoryImg;
 
     private String mBundleValue = DataEntry.BUNDLE_UNKNOWN;
@@ -64,15 +70,20 @@ public class MainActivity extends AppCompatActivity  {
     String timeReceived;
 
     private TextView mAirtimeBalance;
+    private TextView mCurrentTime;
 
-    // result from accessibility service
-    String mText;
+
     //Notification id
     private static final int uniqueID = 1000;
 
 
     private Receiver mReceiver;
 
+    // result from accessibility service
+    String mText;
+    String currentTime;
+
+    Handler h;
 
     /** Database helper that will provide us access to the database */
     private DataDbHelper mDbHelper;
@@ -87,13 +98,10 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         IntentFilter filter = new IntentFilter(Receiver.ACTION_RESPONSE);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         mReceiver = new Receiver();
         registerReceiver(mReceiver, filter);
-
-
 
         /** Initialise db helper */
         mDbHelper = new DataDbHelper(this);
@@ -106,11 +114,28 @@ public class MainActivity extends AppCompatActivity  {
         mRequestSourceSpinner = (Spinner) findViewById(R.id.request_source_spinner);
         mTimeReceived = (EditText) findViewById(R.id.time_received_edit_text);
 
+        // set time from editText
+       // new SetTime(mTimeReceived);
+
 //        textView.setTextColor(ContextCompat.getColor(this,R.color.TextColor));
 
         mBundleCostSpinner.setEnabled(false);
 
         mAirtimeBalance = (TextView) findViewById(R.id.airtime_label);
+        mCurrentTime = (TextView) findViewById(R.id.current_time);
+
+        /**
+         * Save current airtime balance and current time received from onReceiver
+         */
+        SharedPreferences sharedPref = getSharedPreferences("com.tunex.mightyglobackend", Context.MODE_PRIVATE);
+
+        String CURRENT_BALANCE = sharedPref.getString("airtimeBalance","");
+        String CURRENT_TIME = sharedPref.getString("currentTime","");
+        mAirtimeBalance.setText(CURRENT_BALANCE);
+        mCurrentTime.setText(CURRENT_TIME);
+
+
+
 
         // call spinner method
         setupRequestSourceSpinner();
@@ -150,6 +175,7 @@ public class MainActivity extends AppCompatActivity  {
 
 
         mSubmitButton = (Button) findViewById(R.id.submit_button);
+        mAirtimeButton = (Button) findViewById(R.id.airtime_button);
 
 //        mHistoryImg = (ImageView) findViewById(R.id.view_list_img);
 //        mHistoryImg.setOnClickListener(new View.OnClickListener() {
@@ -175,9 +201,47 @@ public class MainActivity extends AppCompatActivity  {
             }
         });
 
+        // check airtime balance
+        mAirtimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+               // checkBalance();
+            }
+        });
+
+
+        h = new Handler();
+        new Thread(new Runnable() {
+            public void run(){
+                while(true){
+                    try{
+                        h.post(new Runnable(){
+                                   public void run(){
+                                     checkBalance();
+                                   }
+                               });
+                                TimeUnit.MINUTES.sleep(2000);
+                    }
+                    catch(Exception ex){
+                    }
+                }
+            }
+        }).start();
+
 
     }
 
+    /**
+     * Method to check airtime balance
+     */
+    private void checkBalance() {
+
+
+        String ussdCode = "%23" + DataEntry.GLO_CHECK_AIRTIME + Uri.encode("#");
+        startActivity(new Intent("android.intent.action.CALL", Uri.parse("tel:" + ussdCode)));
+
+    }
 
 
     /**
@@ -327,7 +391,6 @@ public class MainActivity extends AppCompatActivity  {
         });
     }
 
-
     /** Check if fields are not empty */
     private boolean validateInput(String recipientNumber, String timeReceived){
 
@@ -431,46 +494,90 @@ public class MainActivity extends AppCompatActivity  {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            
 
-            mText = intent.getStringExtra("result");
+            if(intent.getAction().equals(MainActivity.Receiver.ACTION_RESPONSE)){
 
-            mAirtimeBalance.setText(mText);
-
-            Log.i("ussdResult", mText);
-
-
-//            String reg =  "Sorry, you are not gifting to valid Globacom user.";
-
-            String balance = mText;
-
-            Pattern p = Pattern.compile(":(.*?)G");
+                mText = intent.getStringExtra("result");
+                currentTime = intent.getStringExtra("current time");
 
 
-            Matcher m = p.matcher(balance);
+                String balance = mText;
+                Pattern p = Pattern.compile(":(.*?)G");
 
-            if (m.find()){
+                Matcher m = p.matcher(balance);
+
+                if (m.find()) {
+
+                    //Toast.makeText(this, "Your last balance is " + m.group(1), Toast.LENGTH_SHORT).show();
+
+                    String mBalance = "Your last balance is " + m.group(1);
+
+                    //Saved response received from broadcast
+                    SharedPreferences sharedPref = getSharedPreferences("com.tunex.mightyglobackend", Context.MODE_PRIVATE);
+
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString("airtimeBalance", mBalance);
+                    editor.putString("currentTime", currentTime);
+                    editor.apply();
+
+                    mAirtimeBalance.setText(mBalance);
+                    mCurrentTime.setText(currentTime);
+
+                }else{
+
+                    mAirtimeBalance.setText(mText);
+                    mCurrentTime.setText(currentTime);
 
 
-               // status = "success";
+                    saveToDb();
 
+                    showNotification();
 
-                //Toast.makeText(SendDataActivity.this, "Your last balance is "+ m.group(1), Toast.LENGTH_SHORT).show();
+                    showDialog();
 
-            }else {
-
-                //Toast.makeText(getApplicationContext(), "Request not successful please try again", Toast.LENGTH_SHORT).show();
-
-                //status = "failed";
-                showNotification();
-
-                showDialog();
-
-                sendEmail();
-
+                    sendEmail();
+                }
 
             }
 
 
+
+//            Log.i("ussdResult", mText);
+//
+//
+////            String reg =  "Sorry, you are not gifting to valid Globacom user.";
+//
+//            String balance = mText;
+//
+//            Pattern p = Pattern.compile(":(.*?)G");
+//
+//
+//            Matcher m = p.matcher(balance);
+//
+//            if (m.find()){
+//
+//
+//               // status = "success";
+//
+//
+//                //Toast.makeText(SendDataActivity.this, "Your last balance is "+ m.group(1), Toast.LENGTH_SHORT).show();
+//
+//            }else {
+//
+//                //Toast.makeText(getApplicationContext(), "Request not successful please try again", Toast.LENGTH_SHORT).show();
+//
+//                //status = "failed";
+//                showNotification();
+
+//                showDialog();
+
+//                sendEmail();
+//
+//
+//            }
+//
+//
         }
     }
 
@@ -515,28 +622,16 @@ public class MainActivity extends AppCompatActivity  {
         try{
 
 //            //Creating SendMail object
-//            SendMail sm = new SendMail(this, email, subject, message);
-//
-//            //Executing sendmail to send email
-//            sm.execute();
+            SendMail sm = new SendMail(this, email, subject, message);
+
+            //Executing sendmail to send email
+            sm.execute();
 
 
         }catch (Exception e){
 
             Log.e("SendMail", e.getMessage(), e);
         }
-
-
-
-//
-//        Intent intent = new Intent(Intent.ACTION_SENDTO); // it's not ACTION_SEND
-//        intent.setType("text/plain");
-//        intent.putExtra(Intent.EXTRA_SUBJECT, "Subject of email");
-//        intent.putExtra(Intent.EXTRA_TEXT, "Body of email");
-//        //intent.setData(Uri.parse("mailto:default@recipient.com")); // or just "mailto:" for blank
-//        intent.setData(Uri.parse("mailto:tunde8983@gmail.com"));
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // this will make such that when user returns to your app, your app is displayed, instead of the email app.
-//        startActivity(intent);
 
 
     }
@@ -559,7 +654,7 @@ public class MainActivity extends AppCompatActivity  {
         Notification mNotification = new Notification.Builder(this)
 
                 .setContentTitle("New Post!")
-                //.setContentText(mText)
+                .setContentText(mText)
                 .setSmallIcon(R.drawable.textview_border)
                 .setContentIntent(pIntent)
                 .setSound(soundUri)
@@ -588,6 +683,7 @@ public class MainActivity extends AppCompatActivity  {
         values.put(DataEntry.COLUMN_BUNDLE_COST, mBundleCost);
         values.put(DataEntry.COLUMN_REQUEST_SOURCE, mRequestSource);
         values.put(DataEntry.COLUMN_TIME_RECEIVED, timeReceived);
+        values.put(DataEntry.COLUMN_TIME_DONE, currentTime);
 
 
         Uri uri = getContentResolver().insert(DataEntry.CONTENT_URI, values);

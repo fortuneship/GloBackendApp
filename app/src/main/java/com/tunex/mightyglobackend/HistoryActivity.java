@@ -46,7 +46,8 @@ public class HistoryActivity extends AppCompatActivity implements LoaderManager.
                 DataEntry.COLUMN_BUNDLE_VALUE,
                 DataEntry.COLUMN_BUNDLE_COST,
                 DataEntry.COLUMN_REQUEST_SOURCE,
-                DataEntry.COLUMN_TIME_RECEIVED};
+                DataEntry.COLUMN_TIME_RECEIVED,
+                DataEntry.COLUMN_TIME_DONE};
 
         return new CursorLoader(this,
                 DataEntry.CONTENT_URI,

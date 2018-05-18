@@ -28,7 +28,7 @@ public class DataDbHelper extends SQLiteOpenHelper {
                 + DataEntry.COLUMN_BUNDLE_COST + " TEXT, "
                 + DataEntry.COLUMN_REQUEST_SOURCE + " TEXT, "
                 + DataEntry.COLUMN_TIME_RECEIVED + " TEXT "
-                + DataEntry.COLUMN_STATUS_ + " TEXT, "
+                + DataEntry.COLUMN_STATUS_ + " NUMERIC , "
                 + DataEntry.COLUMN_TIME_DONE + " NUMERIC " + ");";
         db.execSQL(SQL_CREATE_PETS_TABLE);
     }

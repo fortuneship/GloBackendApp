@@ -93,6 +93,14 @@ public class Contract {
         public static final String CODE_TWENTY_FIVE_GIG  = "*127*1*";
         public static final String CODE_TWELVE_FIVE_MB  = "*127*32*";
 
+        /**
+         * Check balance code
+         */
+        public static final String GLO_CHECK_AIRTIME = "124*1";
+
+        public static final String SUCESS = "successful";
+        public static final String FAIL = "fail";
+
 
     }
 
