@@ -70,14 +70,14 @@ public class Contract {
 
         /** Bundle Price */
         public static final String BUNDLE_UNKOWN_PRICE = "Unknown";
-        public static final String ONE_GIG_PRICE = "#1000";
-        public static final String TWO_GIG_PRICE = "#2000";
-        public static final String FOUR_FIVE_GIG_PRICE = "#3000";
-        public static final String SEVEN_TWO_GIG_PRICE = "#4000";
-        public static final String TWELVE_FIVE_GIG_PRICE = "#5000";
-        public static final String FIFTEEN_SIX_GIG_PRICE = "#6000";
-        public static final String TWENTY_FIVE_GIG_PRICE = "#7000";
-        public static final String TWELVE_FIVE_MB_PRICE = "#8000";
+        public static final String ONE_GIG_PRICE = "1000";
+        public static final String TWO_GIG_PRICE = "2000";
+        public static final String FOUR_FIVE_GIG_PRICE = "3000";
+        public static final String SEVEN_TWO_GIG_PRICE = "4000";
+        public static final String TWELVE_FIVE_GIG_PRICE = "5000";
+        public static final String FIFTEEN_SIX_GIG_PRICE = "6000";
+        public static final String TWENTY_FIVE_GIG_PRICE = "7000";
+        public static final String TWELVE_FIVE_MB_PRICE = "8000";
 
 
 

@@ -9,6 +9,15 @@
     <string name="error">Failed to save to database</string>
     <string name="form_save">Save to database successfully</string>
 
+    <!--notification message-->
+    <string name="device_notification_message">Hello you have a new post !.</string>
+    <string name="speech_text">your balance is low please top up!</string>
+
+    <!--email content-->
+    <string name="email_id">tunde8983@gmail.com</string>
+    <string name="email_subject">glo data sent failed</string>
+    <string name="email_message"> fail</string>
+
 
     <string name="airtime_label">Airtime Balance</string>
     <string name="current_time">Time</string>
@@ -33,7 +42,6 @@
     <!--<string name="action_send">Send Data</string>-->
     <string name="action_submit">Submit</string>
     <string name="action_airtime_balance">Airtime</string>
-
 
 
     <!-- Label for dropdown menu option if the request source is unknown [CHAR LIMIT=20] -->
@@ -86,33 +94,31 @@
     <string name="action_delete_all_entries">Delete all entries</string>
 
 
-
-
     <!-- Label for dropdown menu option if the request source is unknown [CHAR LIMIT=20] -->
     <string name="bundle_unknown_price">Unknown</string>
 
-    <string name="one_gig_price">#1000</string>
+    <string name="one_gig_price">1000</string>
 
     <!-- Label for dropdown menu option if the pet is male [CHAR LIMIT=20] -->
-    <string name="two_gig_price">#2000</string>
+    <string name="two_gig_price">2000</string>
 
     <!-- Label for dropdown menu option if the pet is female [CHAR LIMIT=20] -->
-    <string name="four_point_five_price">#3000</string>
+    <string name="four_point_five_price">3000</string>
 
     <!-- Label for dropdown menu option if the pet's gender is unknown  -->
-    <string name="seven_point_two_price">#4000</string>
+    <string name="seven_point_two_price">4000</string>
 
     <!-- Label for dropdown menu option if the pet's gender is unknown  -->
-    <string name="twelve_point_five_price">$5000</string>
+    <string name="twelve_point_five_price">5000</string>
 
     <!-- Label for dropdown menu option if the pet's gender is unknown  -->
-    <string name="fifteen_point_six_price">$6000</string>
+    <string name="fifteen_point_six_price">6000</string>
 
     <!-- Label for dropdown menu option if the pet's gender is unknown  -->
-    <string name="twenty_five_price">#7000</string>
+    <string name="twenty_five_price">7000</string>
 
     <!-- Label for dropdown menu option if the pet's gender is unknown  -->
-    <string name="twelve_point_five_mb_price">#8000</string>
+    <string name="twelve_point_five_mb_price">8000</string>
 
 
 </resources>

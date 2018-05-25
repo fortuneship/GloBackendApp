@@ -1,6 +1,7 @@
 package com.tunex.mightyglobackend;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.app.Notification;
@@ -20,10 +21,13 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -45,14 +49,20 @@ import com.tunex.mightyglobackend.data.Contract;
 import com.tunex.mightyglobackend.data.Contract.DataEntry;
 import com.tunex.mightyglobackend.data.DataDbHelper;
 import com.tunex.mightyglobackend.task.SendMail;
+import com.tunex.mightyglobackend.utilities.SendNotification;
+import com.tunex.mightyglobackend.utilities.SetTime;
 
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity {
+
+    Toolbar toolbar;
 
     private EditText mRecipientNumber, mTimeReceived;
     private Spinner mBundleValueSpinner;
@@ -73,17 +83,18 @@ public class MainActivity extends AppCompatActivity  {
     private TextView mCurrentTime;
 
 
-    //Notification id
-    private static final int uniqueID = 1000;
-
-
     private Receiver mReceiver;
 
     // result from accessibility service
     String mText;
     String currentTime;
 
-    Handler h;
+    String mBalance;
+
+
+    private Handler handler;
+
+    private TextToSpeech textToSpeechSystem;
 
     /** Database helper that will provide us access to the database */
     private DataDbHelper mDbHelper;
@@ -98,6 +109,10 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        toolbar = (Toolbar) findViewById(R.id.toolBar);
+        setSupportActionBar(toolbar);
+
+
         IntentFilter filter = new IntentFilter(Receiver.ACTION_RESPONSE);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         mReceiver = new Receiver();
@@ -107,7 +122,6 @@ public class MainActivity extends AppCompatActivity  {
         mDbHelper = new DataDbHelper(this);
 
 
-
         mRecipientNumber = (EditText) findViewById(R.id.recipient_number_edit_text);
         mBundleValueSpinner = (Spinner) findViewById(R.id.bundle_spinner);
         mBundleCostSpinner = (Spinner) findViewById(R.id.bundle_cost_edit_text);
@@ -115,7 +129,7 @@ public class MainActivity extends AppCompatActivity  {
         mTimeReceived = (EditText) findViewById(R.id.time_received_edit_text);
 
         // set time from editText
-       // new SetTime(mTimeReceived);
+        new SetTime(mTimeReceived);
 
 //        textView.setTextColor(ContextCompat.getColor(this,R.color.TextColor));
 
@@ -123,6 +137,8 @@ public class MainActivity extends AppCompatActivity  {
 
         mAirtimeBalance = (TextView) findViewById(R.id.airtime_label);
         mCurrentTime = (TextView) findViewById(R.id.current_time);
+
+
 
         /**
          * Save current airtime balance and current time received from onReceiver
@@ -206,37 +222,83 @@ public class MainActivity extends AppCompatActivity  {
             @Override
             public void onClick(View view) {
 
-               // checkBalance();
+                checkBalance();
+
+                // if balance is below threshold
+               // lowBalance();
             }
         });
 
 
-        h = new Handler();
-        new Thread(new Runnable() {
-            public void run(){
-                while(true){
-                    try{
-                        h.post(new Runnable(){
-                                   public void run(){
-                                     checkBalance();
-                                   }
-                               });
-                                TimeUnit.MINUTES.sleep(2000);
+//        h = new Handler();
+//        new Thread(new Runnable() {
+//            public void run(){
+//                while(true){
+//                    try{
+//                        h.post(new Runnable(){
+//                                   public void run(){
+//                                     checkBalance();
+//                                   }
+//                               });
+//                                TimeUnit.MINUTES.sleep(2000);
+//                    }
+//                    catch(Exception ex){
+//                    }
+//                }
+//            }
+//        }).start();
+
+        handler = new Handler();
+        handler.postDelayed(runnable, 300000);
+
+        //handler.removeCallbacks(runnable);
+
+        textToSpeechSystem = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+
+
+                if (status == TextToSpeech.SUCCESS) {
+                    int result = textToSpeechSystem.setLanguage(Locale.US);
+                    if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("TTS", "This Language is not supported");
                     }
-                    catch(Exception ex){
-                    }
+                   // speak("Hello");
+
+                } else {
+                    Log.e("TTS", "Initilization Failed!");
                 }
+
+
             }
-        }).start();
+        });
+
 
 
     }
+
+
+    /**
+     * check balance every 5 minutes
+     */
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+      /* do what you need to do */
+          checkBalance();
+            // if balance is below threshold
+            lowBalance();
+
+      /* and here comes the "trick" */
+            handler.postDelayed(this, 300000);
+        }
+    };
+
 
     /**
      * Method to check airtime balance
      */
     private void checkBalance() {
-
 
         String ussdCode = "%23" + DataEntry.GLO_CHECK_AIRTIME + Uri.encode("#");
         startActivity(new Intent("android.intent.action.CALL", Uri.parse("tel:" + ussdCode)));
@@ -488,6 +550,7 @@ public class MainActivity extends AppCompatActivity  {
     }
 
 
+
     /** Receive response from accessibility service and display in activity */
     public class Receiver extends BroadcastReceiver {
         public static final String ACTION_RESPONSE = "com.example.mighty5.mightydata.android.intent.action.CALL";
@@ -498,12 +561,16 @@ public class MainActivity extends AppCompatActivity  {
 
             if(intent.getAction().equals(MainActivity.Receiver.ACTION_RESPONSE)){
 
+                // response from ussd stored in mText
                 mText = intent.getStringExtra("result");
                 currentTime = intent.getStringExtra("current time");
 
+//                String reg =  "Sorry, you are not gifting to valid Globacom user.";
 
+                // matcher and pattern to extract balance value from mText
                 String balance = mText;
                 Pattern p = Pattern.compile(":(.*?)G");
+
 
                 Matcher m = p.matcher(balance);
 
@@ -511,7 +578,8 @@ public class MainActivity extends AppCompatActivity  {
 
                     //Toast.makeText(this, "Your last balance is " + m.group(1), Toast.LENGTH_SHORT).show();
 
-                    String mBalance = "Your last balance is " + m.group(1);
+                    // Then concatenate "Your last balance is " with the matcher and store in mBalance
+                      mBalance = "Your last balance is " + m.group(1);
 
                     //Saved response received from broadcast
                     SharedPreferences sharedPref = getSharedPreferences("com.tunex.mightyglobackend", Context.MODE_PRIVATE);
@@ -524,6 +592,10 @@ public class MainActivity extends AppCompatActivity  {
                     mAirtimeBalance.setText(mBalance);
                     mCurrentTime.setText(currentTime);
 
+                    // call low balance method
+                    lowBalance();
+
+
                 }else{
 
                     mAirtimeBalance.setText(mText);
@@ -532,55 +604,30 @@ public class MainActivity extends AppCompatActivity  {
 
                     saveToDb();
 
-                    showNotification();
+                    // send notification when request processing fails
+                    SendNotification.notification(MainActivity.this, getResources().getString(R.string.device_notification_message));
+
 
                     showDialog();
 
+                    // send email when request failed
                     sendEmail();
+
+//                    Log.i("ussdResult", mText);
+
                 }
 
             }
 
 
-
-//            Log.i("ussdResult", mText);
-//
-//
-////            String reg =  "Sorry, you are not gifting to valid Globacom user.";
-//
-//            String balance = mText;
-//
-//            Pattern p = Pattern.compile(":(.*?)G");
-//
-//
-//            Matcher m = p.matcher(balance);
-//
-//            if (m.find()){
-//
-//
-//               // status = "success";
-//
-//
-//                //Toast.makeText(SendDataActivity.this, "Your last balance is "+ m.group(1), Toast.LENGTH_SHORT).show();
-//
-//            }else {
-//
-//                //Toast.makeText(getApplicationContext(), "Request not successful please try again", Toast.LENGTH_SHORT).show();
-//
-//                //status = "failed";
-//                showNotification();
-
-//                showDialog();
-
-//                sendEmail();
-//
-//
-//            }
-//
-//
         }
     }
 
+
+
+    /**
+     * Show dialog when request fails
+     */
     private void showDialog() {
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -604,20 +651,19 @@ public class MainActivity extends AppCompatActivity  {
 
     }
 
+    /**
+     * Send email when request fails
+     */
     private void sendEmail(){
 
         //String SLACK_URL = "https://hooks.slack.com/services/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";
 
         //String myJSONStr = 'payload= {"username": "SALE BOT", "icon_url": "example.com/img/icon.jpg", "channel": "#general"}'
 
-
-
-
-
         //Getting content for email
-        String email = "tunde8983@gmail.com";
-        String subject = "glo data sent failed";
-        String message = " fail";
+        String email = getResources().getString(R.string.email_id);
+        String subject = getResources().getString(R.string.email_subject);
+        String message =  getResources().getString(R.string.email_message);
 
         try{
 
@@ -636,41 +682,60 @@ public class MainActivity extends AppCompatActivity  {
 
     }
 
+    /**
+     * Check if balance is less / equal to threshold
+     */
+    private void lowBalance() {
+
+        // Your last balance is  N3400.86.
+
+        // create a local variable for benchmark price(i.e price to compare with the price mBalance
+        double balanceThreshold = 4000;
 
 
+        // create variable " mCurrentBalanceSubString" to hold the sub string of mBalance
+        String mCurrentBalanceSubString = mBalance.substring(23, 30);
 
-    private void showNotification() {
+        // convert  " mCurrentBalanceSubString" to double and store in "mmm" because it will throw an error if not converted(Now you've converted both balanceThreshold  and
+        // " mCurrentBalanceSubString" to the same data type then you can compare them).
+        double mmm = Double.parseDouble(mCurrentBalanceSubString);
 
-        // define sound URI, the sound to be played when there's a notification
-        Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+        //Do comparison
+        if (mmm <= balanceThreshold){
 
-        // intent triggered, you can add other intent for other actions
-        Intent mIntent = new Intent(this, MainActivity.class);
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, mIntent, 0);
+           // Toast.makeText(MainActivity.this, "your balance is low please top up!", Toast.LENGTH_LONG).show();
+
+            Log.i("lowBalance",  "your balance is low please top up!");
+
+            speak(getString(R.string.speech_text));
 
 
-        // this is it, we'll build the notification!
-        // in the addAction method, if you don't want any icon, just set the first param to 0
-        Notification mNotification = new Notification.Builder(this)
+        }
 
-                .setContentTitle("New Post!")
-                .setContentText(mText)
-                .setSmallIcon(R.drawable.textview_border)
-                .setContentIntent(pIntent)
-                .setSound(soundUri)
-                .setWhen(System.currentTimeMillis())
-                .build();
+        Log.i("subString", mCurrentBalanceSubString);
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        notificationManager.notify(uniqueID, mNotification);
-
-        // If you want to hide the notification after it was selected, do the code below
-        mNotification.flags |= Notification.FLAG_AUTO_CANCEL;
-
-        notificationManager.notify(0, mNotification);
     }
 
+    /**
+     * speak method
+     * @param text
+     */
+    private void speak(String text){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            textToSpeechSystem.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+        }else{
+            textToSpeechSystem.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (textToSpeechSystem != null) {
+            textToSpeechSystem.stop();
+            textToSpeechSystem.shutdown();
+        }
+        super.onDestroy();
+    }
 
 
 

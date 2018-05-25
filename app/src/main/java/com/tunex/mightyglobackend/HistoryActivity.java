@@ -6,11 +6,14 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.widget.ListView;
 
 import com.tunex.mightyglobackend.data.Contract.DataEntry;
 
 public class HistoryActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    Toolbar toolbar;
 
     private static final int DATA_LOADER = 0;
 
@@ -20,6 +23,9 @@ public class HistoryActivity extends AppCompatActivity implements LoaderManager.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
+
+        toolbar = (Toolbar) findViewById(R.id.toolBar);
+        setSupportActionBar(toolbar);
 
         ListView listView = (ListView) findViewById(R.id.listView);
 

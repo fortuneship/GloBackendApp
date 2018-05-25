@@ -29,8 +29,6 @@ public class UssdResponse extends AccessibilityService {
 
     public static String TAG =  UssdResponse.class.getSimpleName();
 
-    private static final int uniqueID = 1000;
-
     String text;
 
     @Override
@@ -66,6 +64,9 @@ public class UssdResponse extends AccessibilityService {
             broadcastIntent.putExtra("result", text);
             broadcastIntent.putExtra("current time", currentTime);
             sendBroadcast(broadcastIntent);
+
+
+          //  [Main Bal: N3400.86.Get rate of 11K/Sec to Call all Glo number & 15K/sec to Call other Networks.Daily rental N5.To subscribe just dial *211#, OK]
 
 
 //            // if (!text.isEmpty()){
