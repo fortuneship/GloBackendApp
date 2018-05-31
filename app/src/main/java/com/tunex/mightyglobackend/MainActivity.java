@@ -783,6 +783,9 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.action_delete_all_entries:
                 //deleteAllPets();
+
+                startActivity(new Intent(this, MightyApiRequestActivity.class));
+
                 return true;
         }
         return super.onOptionsItemSelected(item);

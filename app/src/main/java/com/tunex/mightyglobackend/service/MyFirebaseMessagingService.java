@@ -16,6 +16,8 @@ import com.tunex.mightyglobackend.MainActivity;
 import com.tunex.mightyglobackend.R;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
+
+
     public MyFirebaseMessagingService() {
     }
 

@@ -38,7 +38,7 @@ public class DataCursorAdapter extends CursorAdapter {
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
 
-//        return LayoutInflater.from(context).inflate(R.layout.list_item, parent, false);
+//        return LayoutInflater.from(context).inflate(R.layout.list_mighty_api_request_item, parent, false);
         return LayoutInflater.from(context).inflate(R.layout.card_view_item_list_layout, parent, false);
     }
 
