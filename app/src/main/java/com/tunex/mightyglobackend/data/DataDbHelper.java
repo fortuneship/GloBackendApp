@@ -1,9 +1,14 @@
 package com.tunex.mightyglobackend.data;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
+import android.util.Log;
+import android.widget.Toast;
 
+import com.tunex.mightyglobackend.R;
 import com.tunex.mightyglobackend.data.Contract.DataEntry;
 
 /**
@@ -39,5 +44,33 @@ public class DataDbHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DataEntry.TABLE_NAME);
 
     }
+
+    public static void saveToDb(String recipientNumber, String mBundleValue, String mBundleCost, String mRequestSource, String timeReceived, String currentTime, Context context){
+
+
+        ContentValues values = new ContentValues();
+        values.put(DataEntry.COLUMN_RECIPIENT_NUMBER, recipientNumber);
+        values.put(DataEntry.COLUMN_BUNDLE_VALUE, mBundleValue);
+        values.put(DataEntry.COLUMN_BUNDLE_COST, mBundleCost);
+        values.put(DataEntry.COLUMN_REQUEST_SOURCE, mRequestSource);
+        values.put(DataEntry.COLUMN_TIME_RECEIVED, timeReceived);
+        values.put(DataEntry.COLUMN_TIME_DONE, currentTime);
+
+
+        Uri uri = context.getContentResolver().insert(DataEntry.CONTENT_URI, values);
+
+        if (uri == null) {
+            Toast.makeText(context, context.getString(R.string.error), Toast.LENGTH_SHORT).show();
+            Log.i("info:", "error saving to db");
+        } else {
+            Toast.makeText(context, context.getString(R.string.form_save), Toast.LENGTH_SHORT).show();
+
+            Log.i("info:", "save to db is successful");
+        }
+
+
+
+    }
+
 
 }

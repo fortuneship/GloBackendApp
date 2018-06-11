@@ -22,10 +22,10 @@ public class SendNotification {
     private static final int uniqueID = 100;
 
 
-    public static void notification(Context ctx, String mText){
+    public static void notification(Context ctx,String title, String mText){
 
         // define sound URI, the sound to be played when there's a notification
-        Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+        Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         // intent triggered, you can add other intent for other actions
         Intent mIntent = new Intent(ctx, MainActivity.class);
@@ -36,7 +36,7 @@ public class SendNotification {
         // in the addAction method, if you don't want any icon, just set the first param to 0
         Notification mNotification = new Notification.Builder(ctx)
 
-                .setContentTitle("New Post!")
+                .setContentTitle(title)
                 .setContentText(mText)
                 .setSmallIcon(R.drawable.textview_border)
                 .setContentIntent(pIntent)

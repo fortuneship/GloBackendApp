@@ -5,60 +5,60 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/orderId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-medium"
-        android:hint="orderId"
-        android:textAppearance="?android:textAppearanceMedium"
-        android:textColor="#2B3D4D" />
+    <!--<TextView-->
+        <!--android:id="@+id/orderId"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:fontFamily="sans-serif-medium"-->
+        <!--android:hint="orderId"-->
+        <!--android:textAppearance="?android:textAppearanceMedium"-->
+        <!--android:textColor="#2B3D4D" />-->
 
-    <TextView
-        android:id="@+id/phoneNo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif"
-        android:hint="phoneNo"
-        android:textAppearance="?android:textAppearanceSmall"
-        android:textColor="#AEB6BD" />
+    <!--<TextView-->
+        <!--android:id="@+id/phoneNo"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:fontFamily="sans-serif"-->
+        <!--android:hint="phoneNo"-->
+        <!--android:textAppearance="?android:textAppearanceSmall"-->
+        <!--android:textColor="#AEB6BD" />-->
 
-    <TextView
-        android:id="@+id/quantity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif"
-        android:hint="quantity"
-        android:textAppearance="?android:textAppearanceSmall"
-        android:textColor="#AEB6BD" />
+    <!--<TextView-->
+        <!--android:id="@+id/quantity"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:fontFamily="sans-serif"-->
+        <!--android:hint="quantity"-->
+        <!--android:textAppearance="?android:textAppearanceSmall"-->
+        <!--android:textColor="#AEB6BD" />-->
 
-    <TextView
-        android:id="@+id/network"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif"
-        android:hint="network"
-        android:textAppearance="?android:textAppearanceSmall"
-        android:textColor="#AEB6BD" />
+    <!--<TextView-->
+        <!--android:id="@+id/network"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:fontFamily="sans-serif"-->
+        <!--android:hint="network"-->
+        <!--android:textAppearance="?android:textAppearanceSmall"-->
+        <!--android:textColor="#AEB6BD" />-->
 
-    <TextView
-        android:id="@+id/status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif"
-        android:hint="status"
-        android:textAppearance="?android:textAppearanceSmall"
-        android:textColor="#AEB6BD" />
+    <!--<TextView-->
+        <!--android:id="@+id/status"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:fontFamily="sans-serif"-->
+        <!--android:hint="status"-->
+        <!--android:textAppearance="?android:textAppearanceSmall"-->
+        <!--android:textColor="#AEB6BD" />-->
 
 
-    <TextView
-        android:id="@+id/statusCode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif"
-        android:hint="statusCode"
-        android:textAppearance="?android:textAppearanceSmall"
-        android:textColor="#AEB6BD" />
+    <!--<TextView-->
+        <!--android:id="@+id/statusCode"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:fontFamily="sans-serif"-->
+        <!--android:hint="statusCode"-->
+        <!--android:textAppearance="?android:textAppearanceSmall"-->
+        <!--android:textColor="#AEB6BD" />-->
 
 
 </LinearLayout>

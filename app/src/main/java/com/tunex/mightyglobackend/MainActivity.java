@@ -91,10 +91,10 @@ public class MainActivity extends AppCompatActivity {
 
     String mBalance;
 
-
     private Handler handler;
 
     private TextToSpeech textToSpeechSystem;
+
 
     /** Database helper that will provide us access to the database */
     private DataDbHelper mDbHelper;
@@ -153,9 +153,11 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        // call spinner method
+//        // call spinner method
         setupRequestSourceSpinner();
         setupBundleValueSpinner();
+
+
 
         /** change button text and color when fields are not empty using text watcher*/
         TextWatcher tw = new TextWatcher() {
@@ -167,9 +169,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                 recipientNumber = mRecipientNumber.getText().toString().trim();
-                 timeReceived = mTimeReceived.getText().toString().trim();
-                
+                recipientNumber = mRecipientNumber.getText().toString().trim();
+                timeReceived = mTimeReceived.getText().toString().trim();
+
 
                 validateInput(recipientNumber, timeReceived);
 
@@ -213,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 submit();
-               // sendGloData();
+
             }
         });
 
@@ -225,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
                 checkBalance();
 
                 // if balance is below threshold
-               // lowBalance();
+                // lowBalance();
             }
         });
 
@@ -263,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         Log.e("TTS", "This Language is not supported");
                     }
-                   // speak("Hello");
+                    // speak("Hello");
 
                 } else {
                     Log.e("TTS", "Initilization Failed!");
@@ -273,9 +275,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //method call to populate fields from api
+        apiRequest();
 
 
     }
+
+
 
 
     /**
@@ -285,7 +291,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
       /* do what you need to do */
-          checkBalance();
+            checkBalance();
             // if balance is below threshold
             lowBalance();
 
@@ -536,6 +542,8 @@ public class MainActivity extends AppCompatActivity {
 
             sendGloData();
 
+            //saveToDb();
+
         }else{
 
             Toast.makeText(this, "Fields are empty", Toast.LENGTH_LONG).show();
@@ -557,7 +565,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            
+
 
             if(intent.getAction().equals(MainActivity.Receiver.ACTION_RESPONSE)){
 
@@ -579,9 +587,9 @@ public class MainActivity extends AppCompatActivity {
                     //Toast.makeText(this, "Your last balance is " + m.group(1), Toast.LENGTH_SHORT).show();
 
                     // Then concatenate "Your last balance is " with the matcher and store in mBalance
-                      mBalance = "Your last balance is " + m.group(1);
+                    mBalance = "Your last balance is " + m.group(1);
 
-                    //Saved response received from broadcast
+                    //Saved response received from broadcast to sharedPreferences
                     SharedPreferences sharedPref = getSharedPreferences("com.tunex.mightyglobackend", Context.MODE_PRIVATE);
 
                     SharedPreferences.Editor editor = sharedPref.edit();
@@ -605,7 +613,8 @@ public class MainActivity extends AppCompatActivity {
                     saveToDb();
 
                     // send notification when request processing fails
-                    SendNotification.notification(MainActivity.this, getResources().getString(R.string.device_notification_message));
+                    SendNotification.notification(MainActivity.this, getResources().getString(R.string.device_notification_title),
+                            getResources().getString(R.string.device_notification_message));
 
 
                     showDialog();
@@ -692,27 +701,40 @@ public class MainActivity extends AppCompatActivity {
         // create a local variable for benchmark price(i.e price to compare with the price mBalance
         double balanceThreshold = 4000;
 
+        int indexStart = 23;
+        int indexEnd = 30;
 
-        // create variable " mCurrentBalanceSubString" to hold the sub string of mBalance
-        String mCurrentBalanceSubString = mBalance.substring(23, 30);
-
-        // convert  " mCurrentBalanceSubString" to double and store in "mmm" because it will throw an error if not converted(Now you've converted both balanceThreshold  and
-        // " mCurrentBalanceSubString" to the same data type then you can compare them).
-        double mmm = Double.parseDouble(mCurrentBalanceSubString);
-
-        //Do comparison
-        if (mmm <= balanceThreshold){
-
-           // Toast.makeText(MainActivity.this, "your balance is low please top up!", Toast.LENGTH_LONG).show();
-
-            Log.i("lowBalance",  "your balance is low please top up!");
-
-            speak(getString(R.string.speech_text));
+        try {
 
 
+            // create variable " mCurrentBalanceSubString" to hold the sub string of mBalance
+            String mCurrentBalanceSubString = mBalance.substring(indexStart, indexEnd);
+
+            // convert  " mCurrentBalanceSubString" to double and store in "mmm" because it will throw an error if not converted(Now you've converted both balanceThreshold  and
+            // " mCurrentBalanceSubString" to the same data type then you can compare them).
+            double mmm = Double.parseDouble(mCurrentBalanceSubString);
+
+            //Do comparison
+            if (mmm <= balanceThreshold){
+
+                // Toast.makeText(MainActivity.this, "your balance is low please top up!", Toast.LENGTH_LONG).show();
+
+                Log.i("lowBalance",  "your balance is low please top up!");
+
+                speak(getString(R.string.speech_text));
+
+
+            }
+
+            Log.i("subString", mCurrentBalanceSubString);
+
+
+        }catch (Exception e){
+
+
+            e.printStackTrace();
+            Log.i("exception", e.getMessage());
         }
-
-        Log.i("subString", mCurrentBalanceSubString);
 
     }
 
@@ -738,33 +760,39 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    /** Save to database */
     private void saveToDb(){
 
-
-        ContentValues values = new ContentValues();
-        values.put(DataEntry.COLUMN_RECIPIENT_NUMBER, recipientNumber);
-        values.put(DataEntry.COLUMN_BUNDLE_VALUE, mBundleValue);
-        values.put(DataEntry.COLUMN_BUNDLE_COST, mBundleCost);
-        values.put(DataEntry.COLUMN_REQUEST_SOURCE, mRequestSource);
-        values.put(DataEntry.COLUMN_TIME_RECEIVED, timeReceived);
-        values.put(DataEntry.COLUMN_TIME_DONE, currentTime);
-
-
-        Uri uri = getContentResolver().insert(DataEntry.CONTENT_URI, values);
-
-        if (uri == null) {
-            Toast.makeText(this, getString(R.string.error), Toast.LENGTH_SHORT).show();
-            Log.i("info:", "error saving to db");
-        } else {
-            Toast.makeText(this, getString(R.string.form_save), Toast.LENGTH_SHORT).show();
-
-            Log.i("info:", "save to db is successful");
-        }
-
-
+        DataDbHelper.saveToDb(recipientNumber, mBundleValue, mBundleCost, mRequestSource, timeReceived, currentTime, MainActivity.this);
 
     }
+
+//    private void saveToDb(){
+//
+//
+//        ContentValues values = new ContentValues();
+//        values.put(DataEntry.COLUMN_RECIPIENT_NUMBER, recipientNumber);
+//        values.put(DataEntry.COLUMN_BUNDLE_VALUE, mBundleValue);
+//        values.put(DataEntry.COLUMN_BUNDLE_COST, mBundleCost);
+//        values.put(DataEntry.COLUMN_REQUEST_SOURCE, mRequestSource);
+//        values.put(DataEntry.COLUMN_TIME_RECEIVED, timeReceived);
+//        values.put(DataEntry.COLUMN_TIME_DONE, currentTime);
+//
+//
+//        Uri uri = getContentResolver().insert(DataEntry.CONTENT_URI, values);
+//
+//        if (uri == null) {
+//            Toast.makeText(this, getString(R.string.error), Toast.LENGTH_SHORT).show();
+//            Log.i("info:", "error saving to db");
+//        } else {
+//            Toast.makeText(this, getString(R.string.form_save), Toast.LENGTH_SHORT).show();
+//
+//            Log.i("info:", "save to db is successful");
+//        }
+//
+//
+//
+//    }
 
 
     @Override
@@ -781,16 +809,85 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(this, HistoryActivity.class));
 
                 return true;
-            case R.id.action_delete_all_entries:
+            case R.id.action_api_request:
                 //deleteAllPets();
 
                 startActivity(new Intent(this, MightyApiRequestActivity.class));
+
+                return true;
+
+            case R.id.action_api_notification:
 
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    /** Retrieve value of item clicked from api request list */
+    private void apiRequest(){
+
+        /** populate values from api into field */
+        mRequestSourceSpinner.setSelection(6);
+
+        mRecipientNumber.setText(getIntent().getStringExtra("mPhoneNumber"));
+
+        String apiBundleValue = getIntent().getStringExtra("mQuantity");
+
+
+        if (apiBundleValue != null && apiBundleValue.equals(getString(R.string.one_gig))) {
+            mBundleValueSpinner.setSelection(1);
+            mBundleCost = DataEntry.ONE_GIG_PRICE;
+
+        }else if (apiBundleValue != null && apiBundleValue.equals(getString(R.string.two_gig))){
+            mBundleValueSpinner.setSelection(2);
+            mBundleCost = DataEntry.TWO_GIG_PRICE;
+
+        }else if (apiBundleValue != null && apiBundleValue.equals(getString(R.string.four_point_five))){
+
+            mBundleValueSpinner.setSelection(3);
+            mBundleCost = DataEntry.FOUR_FIVE_GIG_PRICE;
+
+        }else if (apiBundleValue != null && apiBundleValue.equals(R.string.seven_point_two)){
+
+            mBundleValueSpinner.setSelection(4);
+            mBundleCost = DataEntry.SEVEN_TWO_GIG_PRICE;
+
+        }else if (apiBundleValue != null && apiBundleValue.equals(R.string.twelve_point_five)){
+
+            mBundleValueSpinner.setSelection(5);
+            mBundleCost = DataEntry.TWELVE_FIVE_GIG_PRICE;
+
+        }else if (apiBundleValue != null && apiBundleValue.equals(R.string.fifteen_point_six)){
+
+            mBundleValueSpinner.setSelection(6);
+            mBundleCost = DataEntry.FIFTEEN_SIX_GIG_PRICE;
+
+        }else if (apiBundleValue != null && apiBundleValue.equals(R.string.twenty_five)){
+
+            mBundleValueSpinner.setSelection(7);
+            mBundleCost = DataEntry.TWENTY_FIVE_GIG_PRICE;
+
+        }else if (apiBundleValue != null && apiBundleValue.equals(R.string.twelve_point_five_mb)){
+
+            mBundleValueSpinner.setSelection(8);
+            mBundleCost = DataEntry.TWELVE_FIVE_MB_PRICE;
+
+        }else {
+
+            mBundleValueSpinner.setSelection(0);
+            mBundleCost = DataEntry.BUNDLE_UNKOWN_PRICE;
+            mRequestSourceSpinner.setSelection(0);
+        }
+
+
+    }
+
+    public void remoteNotificatioin(){
+
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(getString(R.string.FCM_PREF), Context.MODE_PRIVATE);
+
+        String token = sharedPreferences.getString(getString(R.string.FCM_TOKEN), "");
+    }
 
 //    @Override
 //    public Loader<Cursor> onCreateLoader(int i, Bundle args) {
@@ -824,3 +921,4 @@ public class MainActivity extends AppCompatActivity {
 //
 //    }
 }
+

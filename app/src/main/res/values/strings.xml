@@ -4,6 +4,16 @@
 
     <string name="country_prompt">Choose a country</string>
 
+    <string name="action_insert_dummy_data">Insert Dummy Data</string>
+    <string name="action_remote_request">Remote Request</string>
+    <string name="action_api_notification">Remote Notification</string>
+
+
+
+
+    <string name="FCM_PREF">com.tunex.mightyglobackend.fcm_pref</string>
+    <string name="FCM_TOKEN">com.tunex.mightyglobackend.fcm_token</string>
+
 
     <!--error messages-->
     <string name="error">Failed to save to database</string>
@@ -11,6 +21,9 @@
 
     <!--notification message-->
     <string name="device_notification_message">Hello you have a new post !.</string>
+    <string name="device_notification_title">Hello you have a new post !.</string>
+    <string name="device_notification_api_title">Hello you have a new api request !.</string>
+    <string name="device_notification_api_message">New api request !.</string>
     <string name="speech_text">your balance is low please top up!</string>
 
     <!--email content-->
@@ -90,7 +103,6 @@
     <!-- Label for dropdown menu option if the pet's gender is unknown  -->
     <string name="twelve_point_five_mb">12.5MB</string>
 
-    <string name="action_insert_dummy_data">Insert Dummy Data</string>
     <string name="action_delete_all_entries">Delete all entries</string>
 
 
