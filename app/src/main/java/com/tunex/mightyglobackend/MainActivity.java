@@ -48,6 +48,8 @@ import android.widget.Toast;
 import com.tunex.mightyglobackend.data.Contract;
 import com.tunex.mightyglobackend.data.Contract.DataEntry;
 import com.tunex.mightyglobackend.data.DataDbHelper;
+import com.tunex.mightyglobackend.model.PostRequest;
+import com.tunex.mightyglobackend.model.PostResponse;
 import com.tunex.mightyglobackend.task.SendMail;
 import com.tunex.mightyglobackend.utilities.SendNotification;
 import com.tunex.mightyglobackend.utilities.SetTime;
@@ -59,6 +61,10 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -94,6 +100,8 @@ public class MainActivity extends AppCompatActivity {
     private Handler handler;
 
     private TextToSpeech textToSpeechSystem;
+
+    private MightyApi mightyApi;
 
 
     /** Database helper that will provide us access to the database */
@@ -565,6 +573,34 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+
+
+            mightyApi = ApiClient.getApiClient().create(MightyApi.class);
+
+            PostRequest postRequest = new PostRequest();
+            postRequest.setStatus("success");
+            postRequest.setStatusCode(1);
+
+            Call<PostResponse> postResponseCall =   mightyApi.getTokenAccess(postRequest);
+
+            postResponseCall.enqueue(new Callback<PostResponse>() {
+                @Override
+                public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+
+                    int mStatusCode = response.code();
+
+                    PostResponse postResponse = response.body();
+
+                    Log.i("postResponse:", "" + mStatusCode);
+                    Log.i("postResponseBody:", "" + postResponse);
+                }
+
+                @Override
+                public void onFailure(Call<PostResponse> call, Throwable t) {
+
+                    Log.i("onFailure:", "" + t.getMessage());
+                }
+            });
 
 
             if(intent.getAction().equals(MainActivity.Receiver.ACTION_RESPONSE)){

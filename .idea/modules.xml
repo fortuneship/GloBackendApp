@@ -3,8 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/GloBackendApp.iml" filepath="$PROJECT_DIR$/GloBackendApp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MightyGloBackend.iml" filepath="$PROJECT_DIR$/MightyGloBackend.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
